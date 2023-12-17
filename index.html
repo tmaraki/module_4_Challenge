@@ -7,17 +7,13 @@
         <link style="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
+        <script src="script.js"></script>
         <header>
             <nav>
-             <div class="high-score" href="#">
-                <div class="high-score-text">
-                <div class="small-font">
-                <h3>View high scores</h3>
-             </div>
-             <div class= "card timer">
-                <h3>time left</h3>
+             <div class= "timer">
+                <h3>Time:</h3>
                 <div class = "timer-text">
-                <div class="small-font timer-count">60</div>
+                <div class="small-font timer-count" id="time">60</div>
               </div>
             </nav>
         </header>
@@ -26,11 +22,31 @@
             <section>
                 <div id="quiz challenge">
                  <h1>Coding Quiz Challenge</h1>
-                 <h2>Answer each code-related question before the time runs out. Remeber, every question answered incorrectly will deduct 10 seconds off of your remaining time</h2>
-                 <button id="start-button">Start Quiz</button>
+                 <h2>Answer each code-related question before the time runs out. Remember, every question answered incorrectly will deduct 10 seconds off of your remaining time</h2>
+                 <button id="startBtn">Start Quiz</button>
                 </div>
                 
-                <div id="results">Quiz Results</div>
+                <div id="questionContainer" style="display: none;">
+                    <h1> id="question"</h1>
+                    <button id="answerBtn1"></button>
+                    <button id="answerBtn2"></button>
+                    <button id="answerBtn3"></button>
+                    <button id="answerBtn4"></button>
+                </div>
+                
+                <script>
+                    const startBtn = document.getElementById("startBtn");
+                    const quizChallenge = document.getElementById("quizChallenge");
+                    const questionContainer = document.getElementById("questionContainer");
+                    const question = document.getElementById("question");
+                  
+                    startBtn.addEventListener("click", function() {
+                      quizChallenge.style.display = "none";
+                      questionContainer.style.display = "block";
+                      question.innerText = "What is the capital of France?";
+                    });
+                  </script>
+                  
             </section>
         </main>
     </body>
