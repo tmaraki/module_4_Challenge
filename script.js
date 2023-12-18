@@ -53,6 +53,7 @@ function startTimer(duration, display) {
         timer = duration;
         clearInterval(timeInterval);
         doneGame();
+        showResults();
     }
  }, 1000);
 }
@@ -66,7 +67,7 @@ function startQuiz() {
 }
 
 function showQuestion() {
-    currentQuestionIndex++; // Move to the next question
+    currentQuestionIndex++;
 
   if (currentQuestionIndex < quizData.length) {
     var currentQuestionData = quizData[currentQuestionIndex];
@@ -91,7 +92,6 @@ function showQuestion() {
     li3.textContent = currentQuestionData.answers[2];
     li4.textContent = currentQuestionData.answers[3];
 
-
     var questionContainer = document.getElementById("questionContainer");
     questionContainer.innerHTML = "";
     questionContainer.appendChild(dataTypes);
@@ -102,7 +102,7 @@ function showQuestion() {
     listEl.appendChild(li4);
 } else {
         stopTimer();
-        showResults();
+        doneGame();
       }
     }
 
@@ -111,12 +111,13 @@ var correctAnswerCounter = 0;
 function checkChoice(e) {
         let currentQuestionData = quizData[currentQuestionIndex];
         let correctChoiceIndex = currentQuestionData.correctAns;
+            console.log(correctChoiceIndex);
         let correctChoiceText = currentQuestionData.answers[correctChoiceIndex];
         let result = document.createElement('p');
         var questionContainer = document.getElementById("questionContainer");
             questionContainer.appendChild(result);
 
-        if (e.target.textContent === currentQuestionData.answers[correctChoiceIndex]) {
+        if (e.target.textContent === currentQuestionData.answers[correctChoiceIndex - 1]) {
             correctAnswerCounter++;
             result.textContent = "Correct!";
         } else {
@@ -147,6 +148,13 @@ function allQuestionsAnswered() {
 }
 
 
+function doneGame() {
+    if (allQuestionsAnswered() || timer===0) {
+        stopTimer();
+        showResults;
+        }
+    }
+
 function stopTimer() {
     clearInterval(timeInterval);
 }
@@ -164,14 +172,3 @@ function showResults() {
     results.textContent = "You answered " + correctAnswerCounter + " out of " + quizData.length + " questions correctly.";
     questionContainer.appendChild(results);
 }
-
-function doneGame() {
-if (allQuestionsAnswered() || timer===0) {
-    stopTimer();
-    showResults;
-    }
-}
-
-
-
-
