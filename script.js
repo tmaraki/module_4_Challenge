@@ -7,52 +7,56 @@ var quizData = [
         correctAns: 2
     },
     {
-        question: "Commonly used data types DO NOT include",
-        answers: ["Strings", "Booleans", "Alerts", "Numbers"],
-        correctAns: 2
+        question: "A very useful tool used during development and debugging for printing content to the debugger is...",
+        answers: ["JavaScript", "terminal/bash", "for loops", "console.log"],
+        correctAns: 4
     },
     {
-        question: "Commonly used data types DO NOT include",
-        answers: ["Strings", "Booleans", "Alerts", "Numbers"],
-        correctAns: 2
+        question: "String values must be enclosed within _______ when being assigned to variables",
+        answers: ["commas", "curly brackets", "quotes", "paranthesis"],
+        correctAns: 3
     },
     {
-        question: "Commonly used data types DO NOT include",
-        answers: ["Strings", "Booleans", "Alerts", "Numbers"],
-        correctAns: 2
+        question: "Arrays in JavaScript can be used to store ________.",
+        answers: ["numbers and strings", "other arrays", "booleans", "All of the above"],
+        correctAns: 4
     },
     {
-        question: "Commonly used data types DO NOT include",
-        answers: ["Strings", "Booleans", "Alerts", "Numbers"],
-        correctAns: 2
+        question: "The condition in an if/else statement is enclosed within ________.",
+        answers: ["brackets", "paranthesis", "quotes", "commas"],
+        correctAns: 1
     }
 ];
 
 
 var startBtn = document.getElementById("startBtn");
 startBtn.addEventListener("click", function () {
-    startTimer(60, document.getElementById("time"));
+    startTimer(59, document.getElementById("time"));
     startQuiz();
 });
 
+var timeInterval;
+var timer;
 
 function startTimer(duration, display) {
-    var timer = duration, minutes, seconds;
-    var timeInterval = setInterval(function () {
+    timer = duration; // Initialize the timer
+    var minutes, seconds;
+    timeInterval = setInterval(function () {
+    
         minutes = parseInt(timer / 60, 10);
         seconds = parseInt(timer % 60, 10);
-
         seconds = seconds < 10 ? "0" + seconds : seconds;
-
         display.textContent = seconds;
+        
 
-        if (--timer < 0) {
-            timer = duration;
-            clearInterval(timeInterval);
-            doneGame();
-        }
-    }, 1000);
+    if (--timer < 0) {
+        timer = duration;
+        clearInterval(timeInterval);
+        doneGame();
+    }
+ }, 1000);
 }
+
 
 function startQuiz() {
     var firstMessage = document.getElementById("quizchallenge");
@@ -62,9 +66,11 @@ function startQuiz() {
 }
 
 function showQuestion() {
-    var currentQuestionData = quizData[currentQuestionIndex + 1];
-    if (currentQuestionData) {
-            console.log("Displaying question:", currentQuestionData);
+    currentQuestionIndex++; // Move to the next question
+
+  if (currentQuestionIndex < quizData.length) {
+    var currentQuestionData = quizData[currentQuestionIndex];
+
         var dataTypes = document.createElement('h1');
         var listEl = document.createElement('ol');
         listEl.addEventListener("click", function (e) {
@@ -94,22 +100,21 @@ function showQuestion() {
     listEl.appendChild(li2);
     listEl.appendChild(li3);
     listEl.appendChild(li4);
-
-    } else{
-        console.log("no more questions. Game over.");
-        doneGame();
+} else {
+        stopTimer();
+        showResults();
+      }
     }
-}
+
+var correctAnswerCounter = 0;
 
 function checkChoice(e) {
-        let currentQuestionData = quizData[currentQuestionIndex + 1];
+        let currentQuestionData = quizData[currentQuestionIndex];
         let correctChoiceIndex = currentQuestionData.correctAns;
         let correctChoiceText = currentQuestionData.answers[correctChoiceIndex];
         let result = document.createElement('p');
         var questionContainer = document.getElementById("questionContainer");
             questionContainer.appendChild(result);
-
-        var correctAnswerCounter = 0;
 
         if (e.target.textContent === currentQuestionData.answers[correctChoiceIndex]) {
             correctAnswerCounter++;
@@ -124,16 +129,47 @@ function checkChoice(e) {
             } else{
                 console.warn("result element not found in questionContainer.");
             }
-            showQuestion();
-    }, 1000);
+
+            currentQuestionData++;
+
+            if (allQuestionsAnswered()) {
+                stopTimer();
+                showResults ();
+            } else{
+                showQuestion();
+            }
+        }, 1000);
 }
 
-function doneGame() {
 
+function allQuestionsAnswered() {
+    return currentQuestionIndex === quizData.length - 1;
+}
+
+
+function stopTimer() {
+    clearInterval(timeInterval);
 }
 
 function showResults() {
 
+    var questionContainer = document.getElementById("questionContainer");
+    questionContainer.innerHTML = "";
+
+    var resultsMessage = document.createElement('h1');
+    resultsMessage.textContent = "Quiz Completed";
+    questionContainer.appendChild(resultsMessage);
+
+    var results = document.createElement('p');
+    results.textContent = "You answered " + correctAnswerCounter + " out of " + quizData.length + " questions correctly.";
+    questionContainer.appendChild(results);
+}
+
+function doneGame() {
+if (allQuestionsAnswered() || timer===0) {
+    stopTimer();
+    showResults;
+    }
 }
 
 
