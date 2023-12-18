@@ -28,9 +28,17 @@ var quizData = [
     }
 ];
 
+
+var startBtn = document.getElementById("startBtn");
+startBtn.addEventListener("click", function () {
+    startTimer(60, document.getElementById("time"));
+    startQuiz();
+});
+
+
 function startTimer(duration, display) {
     var timer = duration, minutes, seconds;
-    setInterval(function () {
+    var timeInterval = setInterval(function () {
         minutes = parseInt(timer / 60, 10);
         seconds = parseInt(timer % 60, 10);
 
@@ -46,19 +54,21 @@ function startTimer(duration, display) {
     }, 1000);
 }
 
-window.onload = function () {
-    var fiveMinutes = 60 * 5,
-        display = document.querySelector('#time');
-    startTimer(fiveMinutes, display);
-};
+function startQuiz() {
+    var firstMessage = document.getElementById("quizchallenge");
+    firstMessage.style.display = "none";
+    showQuestion();
+
+}
 
 function showQuestion() {
-    currentQuestionIndex++;
-    var currentQuestionData = quizData[currentQuestionIndex];
-    var dataTypes = document.createElement('h1');
-    var listEl = document.createElement('ol');
-    listEl.addEventListener("click", function (e) {
-        checkChoice(e);
+    var currentQuestionData = quizData[currentQuestionIndex + 1];
+    if (currentQuestionData) {
+            console.log("Displaying question:", currentQuestionData);
+        var dataTypes = document.createElement('h1');
+        var listEl = document.createElement('ol');
+        listEl.addEventListener("click", function (e) {
+            checkChoice(e);
     });
     var li1 = document.createElement('li');
     li1.setAttribute("id", "choice1");
@@ -85,44 +95,47 @@ function showQuestion() {
     listEl.appendChild(li3);
     listEl.appendChild(li4);
 
-}
-
-function displayNextQuestion() {
-    if (currentQuestionIndex < quizData.length) {
-        var currentQuestionData = quizData[currentQuestionIndex];
-        currentQuestionIndex++;
-    } else {
+    } else{
+        console.log("no more questions. Game over.");
         doneGame();
     }
 }
 
-var correctAnswerCounter = 0;
-
 function checkChoice(e) {
-    let currentQuestionData = quizData[currentQuestionIndex];
-    let correctChoiceIndex = currentQuestionData.correctAns;
-    let correctChoiceText = currentQuestionData.answers[correctChoiceIndex];
-    let result = document.createElement('p');
-    var questionContainer = document.getElementById("questionContainer");
-    questionContainer.appendChild(result);
-    if (e.target.textContent === correctChoiceText) {
-        correctAnswerCounter++;
-        result.textContent = "Correct!";
-    } else {
-        result.textContent = "Wrong!";
-    }
-    setTimeout(showQuestion, 3000);
+        let currentQuestionData = quizData[currentQuestionIndex + 1];
+        let correctChoiceIndex = currentQuestionData.correctAns;
+        let correctChoiceText = currentQuestionData.answers[correctChoiceIndex];
+        let result = document.createElement('p');
+        var questionContainer = document.getElementById("questionContainer");
+            questionContainer.appendChild(result);
+
+        var correctAnswerCounter = 0;
+
+        if (e.target.textContent === currentQuestionData.answers[correctChoiceIndex]) {
+            correctAnswerCounter++;
+            result.textContent = "Correct!";
+        } else {
+            result.textContent = "Wrong!";
+        }
+
+        setTimeout(function () {
+            if (questionContainer.contains(result)) {
+                questionContainer.removeChild(result);
+            } else{
+                console.warn("result element not found in questionContainer.");
+            }
+            showQuestion();
+    }, 1000);
 }
 
 function doneGame() {
 
 }
 
-var startBtn = document.getElementById("startBtn");
-startBtn.addEventListener("click", startQuiz);
+function showResults() {
 
-function startQuiz() {
-    var firstMessage = document.getElementById("start-quiz");
-    firstMessage.style.display = "none";
-    displayNextQuestion();
 }
+
+
+
+
